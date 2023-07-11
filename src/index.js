@@ -71,11 +71,20 @@ function Menu() {
     return (
         <menu className='menu'>
             <h2>Menu</h2>
-            <div className="pizzas">
-                {pizzaData.map((pizza) => {
-                    return <Pizza name={pizza.name} ingredients={pizza.ingredients} price={pizza.price} photoName={pizza.photoName} soldOut={pizza.soldOut} />
-                })}
-            </div>
+            {pizzaData.length > 0 ?
+                (<>
+                    <p>Amader ekhane onek gulo bhalo bhalo pizza ache. Chaile khaiya dekhte paren. Taka diye khaben amader kono pera nai</p>
+                    <ul className="pizzas">
+                        {pizzaData.map((pizza) => {
+                            // return <Pizza name={pizza.name} ingredients={pizza.ingredients} price={pizza.price} photoName={pizza.photoName} soldOut={pizza.soldOut} />
+                            return <Pizza pizzaObj={pizza} key={pizza.name} />
+                        })}
+                    </ul>
+                </>)
+                :
+                <p>We are working on our menu. We'll come back soon</p>
+            }
+
         </menu>
     )
 }
@@ -93,20 +102,39 @@ function Footer() {
     //     alert("we are currently Close")
     // }
 
-    return <footer className='footer'> {new Date().toLocaleTimeString()} We're currently open</footer>
+    // return <footer className='footer'> {new Date().toLocaleTimeString()} We're currently open</footer>
+
+    return <footer className="footer">
+        {isOpen ? <Order closeHour={closeHour} /> : <p>You are welcome. We are open between {openHour}.00 and {closeHour}.00</p>
+        }
+    </footer >
+
     // return React.createElement('footer', null, "we're currently open")
 }
 
-function Pizza(props) {
+function Order({ closeHour }) {
+    return (<div className="order">
+        <p>we are currently open until {closeHour}.00. Please come and visit us </p>
+        <button className="btn">Order</button>
+    </div>)
+}
+
+function Pizza({ pizzaObj }) {
+
+    // if (pizzaObj.soldOut) return null;
+
     return (
-        <div className='pizza'>
-            <img src={props.photoName} alt={props.name} />
+        <li className={`pizza ${pizzaObj.soldOut && 'sold-out'}`}>
+            <img src={pizzaObj.photoName} alt={pizzaObj.name} />
             <div>
-                <h2>{props.name}</h2>
-                <p>{props.ingredients}</p>
-                <span>{props.price}</span>
+                <h2>{pizzaObj.name}</h2>
+                <p>{pizzaObj.ingredients}</p>
+                {/* {
+                    pizzaObj.soldOut ? <span>SOLD OUT</span> : <span>{pizzaObj.price}</span>
+                } */}
+                <span>{!pizzaObj.soldOut ? pizzaObj.price : 'SOLD OUT'}</span>
             </div>
-        </div>
+        </li>
     )
 }
 
